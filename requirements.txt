@@ -2,6 +2,7 @@ streamlit
 langchain-openai
 langchain
 langchain-community
+langchain-text-splitters
 faiss-cpu
 openai
 unstructured

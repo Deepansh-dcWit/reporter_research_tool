@@ -2,7 +2,7 @@ import os
 import streamlit as st
 import base64
 from langchain_openai import OpenAI, OpenAIEmbeddings
-from langchain.chains.qa_with_sources import RetrievalQAWithSourcesChain
+from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
     UnstructuredURLLoader,
@@ -151,17 +151,23 @@ if os.path.exists("vectorindex_openai"):
                 llm = OpenAI(temperature=0.7, max_tokens=200)
                 embeddings = OpenAIEmbeddings()
                 vectorstore = FAISS.load_local("vectorindex_openai", embeddings, allow_dangerous_deserialization=True)
-                chain = RetrievalQAWithSourcesChain.from_llm(llm=llm, retriever=vectorstore.as_retriever())
-                result = chain({"question": prompt}, return_only_outputs=True)
+                chain = RetrievalQA.from_chain_type(
+                    llm=llm, 
+                    chain_type="stuff",
+                    retriever=vectorstore.as_retriever(),
+                    return_source_documents=True
+                )
+                result = chain({"query": prompt}, return_only_outputs=True)
                 
-                answer = result["answer"]
+                answer = result["result"]
                 st.write(answer)
                 
                 # Handle sources
                 sources_list = []
-                sources = result.get("sources", "")
-                if sources:
-                    sources_list = [s.strip() for s in sources.replace('\n', ',').split(',') if s.strip()]
+                source_docs = result.get("source_documents", [])
+                if source_docs:
+                    sources_list = [doc.metadata.get('source', 'Unknown') for doc in source_docs]
+                    sources_list = list(set(sources_list))  # Remove duplicates
                     with st.expander("Sources", expanded=False):
                         for source in sources_list:
                             st.caption(source)

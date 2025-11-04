@@ -1,0 +1,118 @@
+/* Hide default streamlit elements */
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+
+/* Remove default title */
+h1 {display: none;}
+
+/* Top left branding */
+.top-left-logo {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    z-index: 1000;
+    width: 100px;
+    opacity: 0.9;
+}
+
+.top-left-title {
+    position: fixed;
+    top: 40px;
+    left: 25px;
+    margin-top: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #e0e0e0;
+    z-index: 1000;
+}
+
+/* Ensure chat messages are above the logo */
+.stChatMessage {
+    position: relative;
+    z-index: 10;
+}
+
+/* Chat input container - fixed center position */
+.stChatFloatingInputContainer {
+    position: fixed !important;
+    top: calc(50% + 10px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    max-width: 700px !important;
+    width: 90% !important;
+    z-index: 10;
+    margin: 0 !important;
+}
+
+.stChatInput {
+    max-width: 100% !important;
+}
+
+.stChatInput > div {
+    max-width: 100% !important;
+}
+
+.stChatInput textarea {
+    min-height: 70px !important;
+    border-radius: 35px !important;
+    font-size: 1rem !important;
+    padding: 24px 10px !important;
+}
+
+/* Upload expander - fixed position right above chat */
+div[data-testid="stExpander"] {
+    position: fixed !important;
+    top: calc(50% - 50px) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    max-width: 600px;
+    width: 85%;
+    margin: 0 !important;
+    border-radius: 35px !important;
+    border: 1px solid #404040 !important;
+    overflow: hidden;
+    background-color: transparent !important;
+    z-index: 11;
+}
+
+div[data-testid="stExpander"] > div:first-child {
+    border-radius: 30px !important;
+    background-color: transparent !important;
+    border: none !important;
+}
+
+div[data-testid="stExpanderDetails"] {
+    border-radius: 30px !important;
+    padding: 16px !important;
+    border: none !important;
+}
+
+/* Hide expand icon */
+div[data-testid="stExpander"] svg {
+    display: none;
+}
+
+/* Main chat area */
+.main .block-container {
+    padding-top: 3rem;
+    max-width: 48rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Hide sidebar - not using it */
+section[data-testid="stSidebar"] {
+    display: none;
+}
+
+/* Adjust main content since no sidebar */
+section[data-testid="stMain"] {
+    margin-left: 0 !important;
+}
+
+/* Empty state info */
+.stAlert {
+    position: relative;
+    z-index: 10;
+}

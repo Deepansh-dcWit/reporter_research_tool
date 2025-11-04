@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment and secrets
+.env
+openai_key.py
+.streamlit/secrets.toml
+
+# Data and indexes
+vectorindex_openai/
+temp_*
+*.csv
+movies.csv
+sample_text.csv
+
+# Jupyter
+*.ipynb_checkpoints
+.ipynb_checkpoints/
+tool.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+*.egg-info/
+

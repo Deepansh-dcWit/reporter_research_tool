@@ -1,0 +1,13 @@
+streamlit
+langchain-openai
+langchain
+langchain-community
+faiss-cpu
+openai
+unstructured
+pdf2image
+pdfminer.six
+pillow
+pypdf
+python-magic-bin
+

@@ -2,7 +2,6 @@ import os
 import streamlit as st
 import base64
 from langchain_openai import OpenAI, OpenAIEmbeddings
-from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import (
     UnstructuredURLLoader,
@@ -151,22 +150,32 @@ if os.path.exists("vectorindex_openai"):
                 llm = OpenAI(temperature=0.7, max_tokens=200)
                 embeddings = OpenAIEmbeddings()
                 vectorstore = FAISS.load_local("vectorindex_openai", embeddings, allow_dangerous_deserialization=True)
-                chain = RetrievalQA.from_chain_type(
-                    llm=llm, 
-                    chain_type="stuff",
-                    retriever=vectorstore.as_retriever(),
-                    return_source_documents=True
-                )
-                result = chain({"query": prompt}, return_only_outputs=True)
                 
-                answer = result["result"]
+                # Retrieve relevant documents
+                retriever = vectorstore.as_retriever()
+                docs = retriever.get_relevant_documents(prompt)
+                
+                # Create context from retrieved documents
+                context = "\n\n".join([doc.page_content for doc in docs[:3]])
+                
+                # Create prompt template
+                template = """Use the following pieces of context to answer the question. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+
+Context: {context}
+
+Question: {question}
+
+Answer:"""
+                
+                # Generate answer
+                prompt_text = template.format(context=context, question=prompt)
+                answer = llm(prompt_text)
                 st.write(answer)
                 
                 # Handle sources
                 sources_list = []
-                source_docs = result.get("source_documents", [])
-                if source_docs:
-                    sources_list = [doc.metadata.get('source', 'Unknown') for doc in source_docs]
+                if docs:
+                    sources_list = [doc.metadata.get('source', 'Unknown') for doc in docs[:3]]
                     sources_list = list(set(sources_list))  # Remove duplicates
                     with st.expander("Sources", expanded=False):
                         for source in sources_list:
